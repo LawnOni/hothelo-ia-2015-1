@@ -1,21 +1,9 @@
 from models.board import Board
 
-class MinmaxPlayer:
+class MobilityPlayer:
     def __init__(self, color):
         self.color = color
         self.opponent_color = self.getOppositeColor(color)
-        self.positions = [
-            [0,0,0,0,0,0,0,0,0,0],
-            [0,99,-8,8,6,6,8,-8,99,0],
-            [0,-8,-24,-4,-3,-3,-4,-24,-8,0],
-            [0,8,-4,7,4,4,7,-4,8,0],
-            [0,6,-3,4,0,0,4,-3,6,0],
-            [0,6,-3,4,0,0,4,-3,6,0],
-            [0,8,-4,7,4,4,7,-4,8,0],
-            [0,-8,-24,-4,-3,-3,-4,-24,-8,0],
-            [0,99,-8,8,6,6,8,-8,99,0],
-            [0,0,0,0,0,0,0,0,0,0]
-        ]
     
     def getOppositeColor(self, color):
         if color == Board.BLACK:
@@ -42,7 +30,7 @@ class MinmaxPlayer:
                 movesLength = valid_moves.__len__()
                 retMove = move
                 
-        return retMove, movesLength
+        return retMove, (moves.__len__() - movesLength)
         
     def max(self, board, depth):
         if depth == 0:
