@@ -15,7 +15,7 @@ class MinScorePlayer:
         alpha = -float('inf')
         beta = float('inf')
         self.opponent_color = self.getOppositeColor(self.color, board)
-        minimax = self.max(board, 3, alpha, beta)
+        minimax = self.max(board, 4, alpha, beta)
         
         return minimax[0]
         
@@ -42,7 +42,7 @@ class MinScorePlayer:
         moves = board.valid_moves(self.color)
 
         if moves.__len__() == 0:
-            return None, float('inf')
+            return self.min(board, depth-1, alpha, beta)
 
         best_value = -float('inf')
 
@@ -73,7 +73,7 @@ class MinScorePlayer:
         moves = board.valid_moves(self.opponent_color)
 
         if moves.__len__() == 0:
-            return None, -float('inf')
+            return self.max(board, depth-1, alpha, beta)
 
         best_value = float('inf')
         retMove = None
