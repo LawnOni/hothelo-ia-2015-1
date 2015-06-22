@@ -15,7 +15,7 @@ class MinScorePlayer:
         alpha = -float('inf')
         beta = float('inf')
         self.opponent_color = self.getOppositeColor(self.color, board)
-        minimax = self.max(board, 2, alpha, beta)
+        minimax = self.max(board, 3, alpha, beta)
         
         return minimax[0]
         
@@ -52,13 +52,14 @@ class MinScorePlayer:
             board_clone.play(move,self.color)
             min_value = self.min(board_clone, depth-1, alpha, beta)[1]
 
+            alpha = max(best_value, alpha)
+            if alpha > beta:
+                return None, float('inf')
+                
             if min_value >= best_value:
                 best_value = min_value
                 retMove = move
 
-            alpha = max(best_value, alpha)
-            if alpha > beta:
-                return None, float('inf')
 
         return retMove, best_value
             
@@ -67,7 +68,7 @@ class MinScorePlayer:
     def min(self, board, depth, alpha, beta):       
 
         if depth == 0:
-            return self.getBestMove(board, self.opponent_color)
+            return self.getBestMove(board, self.color)
         
         moves = board.valid_moves(self.opponent_color)
 
@@ -81,15 +82,17 @@ class MinScorePlayer:
             board_clone = board.get_clone()
             board_clone.play(move,self.opponent_color)
             max_value = self.max(board_clone, depth-1, alpha, beta)[1]
-
+            
+            if alpha > beta:
+                return None, -float('inf')
+                
             if max_value <= best_value:
                 best_value = max_value
                 retMove = move
 
             beta = min(best_value, beta)
 
-            if alpha > beta:
-                return None, -float('inf')
+            
 
         return retMove, best_value
 		
