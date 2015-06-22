@@ -1,47 +1,49 @@
-from models.board import Board
-
 class MobilityPlayer:
     def __init__(self, color):
         self.color = color
-        self.opponent_color = self.getOppositeColor(color)
+        self.opponent_color = None
     
-    def getOppositeColor(self, color):
-        if color == Board.BLACK:
-            return Board.WHITE
+    def getOppositeColor(self, color, board):
+        if color == board.BLACK:
+            return board.WHITE
         else:
-            return Board.BLACK
+            return board.BLACK
 
     def play(self, board):
         alpha = -float('inf')
         beta = float('inf')
-        minimax = self.max(board, 2, alpha, beta)
+        self.opponent_color = self.getOppositeColor(self.color, board)
+        minimax = self.max(board, 4, alpha, beta)
         return minimax[0]
         
     def getBestMove(self, board, color):
         best_value = -float('inf')
         moves = board.valid_moves(color)
         retMove = None
-        movesLength = float('inf')
-        for move in moves:
-            board_clone = board.get_clone()
-            board_clone.play(move,color)
+        movesLength = board.valid_moves(self.getOppositeColor(color, board)).__len__()
+        oponnent_score = board.get_score(self.getOppositeColor(color, board))
 
-            valid_moves = board_clone.valid_moves(self.getOppositeColor(color))
+        # for move in moves:
+        #     board_clone = board.get_clone()
+        #     board_clone.play(move,color)
 
-            if valid_moves.__len__() < movesLength:
-                movesLength = valid_moves.__len__()
-                retMove = move
+        #     valid_moves = board_clone.valid_moves(self.getOppositeColor(color, board))
+
+        #     if valid_moves.__len__() < movesLength:
+        #         movesLength = valid_moves.__len__()
+        #         retMove = move
+        #         oponnent_score = board_clone.get_score(self.getOppositeColor(color, board))
                 
-        return retMove, (moves.__len__() - movesLength)
+        return (moves.__len__() - movesLength - oponnent_score)
         
     def max(self, board, depth, alpha, beta):
         if depth == 0:
-            return self.getBestMove(board, self.color)
+            return None, self.getBestMove(board, self.color)
                 
         moves = board.valid_moves(self.color)
 
         if moves.__len__() == 0:
-            return None, float('inf')
+            return self.min(board, depth-1, alpha, beta)
 
         best_value = -float('inf')
 
@@ -69,12 +71,12 @@ class MobilityPlayer:
     def min(self, board, depth, alpha, beta):       
 
         if depth == 0:
-            return self.getBestMove(board, self.opponent_color)
+            return None, self.getBestMove(board, self.color)
         
         moves = board.valid_moves(self.opponent_color)
 
         if moves.__len__() == 0:
-            return None, -float('inf')
+            return self.max(board, depth-1, alpha, beta)
 
         best_value = float('inf')
         retMove = None
