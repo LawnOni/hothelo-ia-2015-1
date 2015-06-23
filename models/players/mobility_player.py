@@ -13,7 +13,11 @@ class MobilityPlayer:
         alpha = -float('inf')
         beta = float('inf')
         self.opponent_color = self.getOppositeColor(self.color, board)
+
+        import time; start_time = time.time()
         minimax = self.max(board, 4, alpha, beta)
+        print("time elapsed: %.1f seconds" %(time.time() - start_time))
+
         return minimax[0]
         
     def getBestMove(self, board, color):
@@ -22,17 +26,6 @@ class MobilityPlayer:
         retMove = None
         movesLength = board.valid_moves(self.getOppositeColor(color, board)).__len__()
         oponnent_score = board.get_score(self.getOppositeColor(color, board))
-
-        # for move in moves:
-        #     board_clone = board.get_clone()
-        #     board_clone.play(move,color)
-
-        #     valid_moves = board_clone.valid_moves(self.getOppositeColor(color, board))
-
-        #     if valid_moves.__len__() < movesLength:
-        #         movesLength = valid_moves.__len__()
-        #         retMove = move
-        #         oponnent_score = board_clone.get_score(self.getOppositeColor(color, board))
                 
         return (moves.__len__() - movesLength - oponnent_score)
         
@@ -49,7 +42,6 @@ class MobilityPlayer:
 
         retMove = None
         for move in moves:
-            #import pdb; pdb.set_trace()
             board_clone = board.get_clone()
             board_clone.play(move,self.color)
             min_value = self.min(board_clone, depth-1, alpha, beta)[1]
@@ -59,15 +51,11 @@ class MobilityPlayer:
                 retMove = move
 
             alpha = max(best_value, alpha)
-            #   import pdb; pdb.set_trace()
             if alpha > beta:
-                #import pdb; pdb.set_trace()
                 return None, float('inf')
 
-        return retMove, best_value
-            
-            
-            
+        return retMove, best_value 
+
     def min(self, board, depth, alpha, beta):       
 
         if depth == 0:
@@ -82,7 +70,6 @@ class MobilityPlayer:
         retMove = None
         
         for move in moves:
-            # import pdb; pdb.set_trace()
             board_clone = board.get_clone()
             board_clone.play(move,self.opponent_color)
             max_value = self.max(board_clone, depth-1, alpha, beta)[1]
@@ -94,7 +81,6 @@ class MobilityPlayer:
             beta = min(best_value, beta)
 
             if alpha > beta:
-                #import pdb; pdb.set_trace()
                 return None, -float('inf')
 
         return retMove, best_value

@@ -15,8 +15,9 @@ class MinScorePlayer:
         alpha = -float('inf')
         beta = float('inf')
         self.opponent_color = self.getOppositeColor(self.color, board)
+        import time; start_time = time.time()
         minimax = self.max(board, 4, alpha, beta)
-        
+        print("time elapsed: %.1f seconds" %(time.time() - start_time))
         return minimax[0]
         
     def getBestMove(self, board, color):
