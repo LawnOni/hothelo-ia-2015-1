@@ -28,7 +28,11 @@ class MinScorePlayer:
         for move in moves:
             board_clone = board.get_clone()
             board_clone.play(move,color)
-            oponnent_score = board_clone.get_score(self.getOppositeColor(color, board))
+            scores = board_clone.score()
+            if self.color == board.BLACK:
+                oponnent_score = scores[0]
+            else:
+                oponnent_score = scores[1]
 
             if oponnent_score < min_score:
                 min_score = oponnent_score

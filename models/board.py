@@ -73,15 +73,6 @@ class Board:
 
     return [white, black]
 
-  def get_score(self, color):
-	score = 0
-	for i in range(1,9):
-	  for j in range(1,9):
-	    if self.board[i][j] == color:
-		  score += 1
-		  
-	return score
-	
   def _squares(self):
     return [i for i in xrange(11, 89) if 1 <= (i % 10) <= 8]
 
