@@ -2,6 +2,7 @@ class MobilityPlayer:
     def __init__(self, color):
         self.color = color
         self.opponent_color = None
+        self.total_plays = 0
     
     def getOppositeColor(self, color, board):
         if color == board.BLACK:
@@ -17,15 +18,22 @@ class MobilityPlayer:
         import time; start_time = time.time()
         minimax = self.max(board, 4, alpha, beta)
         print("time elapsed: %.1f seconds" %(time.time() - start_time))
-
+        print minimax[0]
+        print "total moves = ",self.total_plays
+        self.total_plays = 0
         return minimax[0]
         
     def getBestMove(self, board, color):
         best_value = -float('inf')
         moves = board.valid_moves(color)
+        self.total_plays += len(moves)
         retMove = None
         movesLength = board.valid_moves(self.getOppositeColor(color, board)).__len__()
-        oponnent_score = board.get_score(self.getOppositeColor(color, board))
+        scores = board.score()
+        if self.color == board.BLACK:
+                oponnent_score = scores[0]
+        else:
+            oponnent_score = scores[1]
                 
         return (moves.__len__() - movesLength - oponnent_score)
         
